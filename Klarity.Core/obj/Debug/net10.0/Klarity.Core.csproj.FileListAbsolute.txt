@@ -1,0 +1,12 @@
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\bin\Debug\net10.0\Klarity.Core.deps.json
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\bin\Debug\net10.0\Klarity.Core.dll
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\bin\Debug\net10.0\Klarity.Core.pdb
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.csproj.AssemblyReference.cache
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.AssemblyInfoInputs.cache
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.AssemblyInfo.cs
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.csproj.CoreCompileInputs.cache
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.dll
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\refint\Klarity.Core.dll
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\Klarity.Core.pdb
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.Core\obj\Debug\net10.0\ref\Klarity.Core.dll

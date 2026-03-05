@@ -1,0 +1,58 @@
+- [x] Configuración del Entorno y Proyecto
+    - [x] Crear directorio y solución .NET
+    - [x] Crear proyecto `Klarity.Core` (Lógica) y `Klarity.UI` (WPF)
+    - [x] Agregar dependencias NuGet (`Microsoft.CodeAnalysis`)
+- [x] Integración con Roslyn
+    - [x] Implementar servicio para cargar y compilar código C#
+    - [x] Extraer AST y Modelo Semántico
+- [x] Grafo de Flujo de Control (CFG)
+    - [x] Diseñar estructura de nodos y aristas del CFG
+    - [x] Implementar `CfgBuilder` para visitar el AST y construir el grafo
+- [x] Análisis de Flujo de Datos (DFA)
+    - [x] Implementar motor genérico de punto fijo (Fixed-point iteration)
+    - [x] Definir estados y reglas de transferencia
+- [x] Análisis de Taint
+    - [x] Definir fuentes (Sources) y sumideros (Sinks) de datos
+    - [x] Implementar rastreo de datos no confiables
+- [x] Interfaz de Usuario (WPF)
+    - [x] Diseñar ventana principal para carga de archivos
+    - [x] Mostrar visualización de análisis y resultados
+- [x] Verificación Final
+    - [x] Crear casos de prueba con vulnerabilidades
+    - [x] Validar detección de Taint
+- [x] Mejoras de UI (Modern Design)
+    - [x] Definir paleta de colores y estilos (Dark Theme)
+    - [x] Personalizar ventana y controles (Botones, Paneles)
+    - [x] Mejorar visualización de resultados
+- [x] Sugerencias de Remediación
+    - [x] Actualizar motor de análisis para generar sugerencias
+    - [x] Mostrar sugerencias en la UI
+- [x] Análisis en Tiempo Real
+    - [x] Implementar trigger en TextChanged
+    - [x] Agregar Debounce para optimizar rendimiento
+- [x] Mejoras de Visualización (Code Highlighting)
+    - [x] Reemplazar TextBox con RichTextBox para soporte de formato
+    - [x] Implementar resaltado de líneas vulnerables
+    - [x] Sincronizar selección de lista con scroll del editor
+- [x] Integración de IA (Smart Assistant)
+    - [x] Crear interfaz `IAIService`
+    - [x] Implementar cliente (Simulado u OpenAI)
+    - [x] Agregar botón "Explain with AI" en la UI
+- [x] Localización al Español
+    - [x] Traducir interfaz de usuario (XAML)
+    - [x] Traducir mensajes de análisis y sugerencias
+    - [x] Traducir respuestas del Asistente IA
+- [x] Detección de Errores Sintácticos
+    - [x] Recolectar Diagnostics del SyntaxTree
+    - [x] Filtrar y mapear errores a VulnerabilityItem
+    - [x] Diferenciar visualmente errores de vulnerabilidades
+- [x] Documentación del Proyecto
+    - [x] Generar reporte de estado (Realizado / Pendiente / Mejoras)
+    - [x] Crear artefacto de documentación final
+- [x] Mejoras de Editor (Numeración + Sintaxis)
+    - [x] Agregar números de línea al editor
+    - [x] Colorear keywords de C# en el RichTextBox
+- [x] API REST (Klarity.API)
+    - [x] Crear proyecto ASP.NET Core
+    - [x] Controlador POST /api/analysis
+    - [x] Cliente HTTP HttpAIService en Klarity.Core

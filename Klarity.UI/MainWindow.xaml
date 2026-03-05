@@ -1,0 +1,155 @@
+﻿<Window x:Class="Klarity.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Klarity" Height="600" Width="1000"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+    
+    <Border Background="{StaticResource WindowBackgroundBrush}" CornerRadius="10" 
+            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+        <Border.Resources>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </Border.Resources>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/> <!-- Title Bar -->
+                <RowDefinition Height="Auto"/> <!-- Toolbar -->
+                <RowDefinition Height="*"/> <!-- Content -->
+                <RowDefinition Height="30"/> <!-- Status Bar -->
+            </Grid.RowDefinitions>
+
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" Background="Transparent" MouseDown="TitleBar_MouseDown">
+                <TextBlock Text="KLARITY" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" 
+                           VerticalAlignment="Center" Margin="20,0,0,0" FontSize="14"/>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+                    <Button Content="_" Click="MinimizeButton_Click" Width="30" Height="30" Padding="0" Background="Transparent" Foreground="{StaticResource ForegroundBrush}"/>
+                    <Button Content="[ ]" Click="MaximizeButton_Click" Width="30" Height="30" Padding="0" Background="Transparent" Foreground="{StaticResource ForegroundBrush}"/>
+                    <Button Content="X" Click="CloseButton_Click" Width="30" Height="30" Padding="0" Background="Transparent" Foreground="#FF5252"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Toolbar -->
+            <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20,10">
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="LoadFileButton" Content="Importar Archivo C#" Margin="0,0,10,0" Click="LoadFileButton_Click"/>
+                    <Button Name="LoadProjectButton" Content="Abrir Carpeta de Proyecto" Click="LoadProjectButton_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Grid Grid.Row="2" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/> <!-- File Explorer -->
+                    <ColumnDefinition Width="2*"/>   <!-- Code Editor -->
+                    <ColumnDefinition Width="1*"/>   <!-- Results -->
+                </Grid.ColumnDefinitions>
+
+                <!-- File Explorer -->
+                <GroupBox Header="EXPLORADOR" BorderBrush="{StaticResource BorderBrush}" Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,10,0">
+                    <TreeView Name="FileExplorer" Background="Transparent" BorderThickness="0" 
+                              SelectedItemChanged="FileExplorer_SelectedItemChanged">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" Foreground="{Binding StatusBrush}" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </GroupBox>
+
+                <!-- Code Editor View -->
+                <GroupBox Grid.Column="1" Header="CÓDIGO FUENTE" BorderBrush="{StaticResource BorderBrush}" Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,10,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>  <!-- Line numbers -->
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Line Numbers Panel -->
+                        <ListBox Name="LineNumbers" 
+                                 Background="#1A1A1A" Foreground="#6E6E6E"
+                                 BorderThickness="0" Padding="0,10,0,0"
+                                 FontFamily="Consolas" FontSize="13"
+                                 IsHitTestVisible="False"
+                                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#6E6E6E"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Height" Value="18"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+
+                        <!-- Code Editor -->
+                        <RichTextBox Grid.Column="1" Name="CodeEditor" 
+                                     Background="#1E1E1E" Foreground="#D4D4D4" 
+                                     FontFamily="Consolas" FontSize="13" 
+                                     BorderThickness="0" Padding="8,10,10,10" 
+                                     VerticalScrollBarVisibility="Auto" 
+                                     AcceptsReturn="True" 
+                                     TextChanged="CodeEditor_TextChanged"
+                                     ScrollViewer.ScrollChanged="CodeEditor_ScrollChanged">
+                            <FlowDocument PageWidth="2000">
+                                <Paragraph>
+                                    <Run Text="// El código aparecerá aquí"/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                    </Grid>
+                </GroupBox>
+
+
+                <!-- Results View -->
+                <GroupBox Grid.Column="2" Header="RESULTADOS DEL ANÁLISIS" BorderBrush="{StaticResource BorderBrush}" Foreground="{StaticResource SecondaryForegroundBrush}">
+                    <ListBox Name="ResultsList" Background="Transparent" BorderThickness="0" Margin="0,10,0,0" SelectionChanged="ResultsList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource ControlBackgroundBrush}" CornerRadius="4" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="VULNERABILIDAD POTENCIAL" Foreground="#FF5252" FontSize="10" FontWeight="Bold"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                            <TextBlock Text="{Binding FilePath}" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                            <TextBlock Text=" › " Foreground="#666666" FontSize="11"/>
+                                            <TextBlock Text="{Binding Location}" Foreground="#888888" FontSize="11" FontStyle="Italic"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Message}" Foreground="White" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                                        
+                                        <!-- Suggestion Box -->
+                                        <Border Background="#252526" CornerRadius="4" Padding="8" Margin="0,8,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="SUGERENCIA:" Foreground="#007ACC" FontSize="9" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Suggestion}" Foreground="#DDDDDD" FontSize="11" TextWrapping="Wrap" Margin="0,2,0,0"/>
+
+                                                <!-- AI Button -->
+                                                <Button Content="✨ Preguntar al Asistente IA" Click="AskAIButton_Click" Tag="{Binding}" 
+                                                        Margin="0,8,0,0" HorizontalAlignment="Left" FontSize="10" Padding="8,4" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="1"/>
+                                                
+                                                <!-- AI Response Area -->
+                                                <TextBlock Text="{Binding AiResponse}" Foreground="#A6E22E" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" 
+                                                           Visibility="{Binding HasAiResponse, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </GroupBox>
+            </Grid>
+
+            <!-- Status Bar -->
+            <Border Grid.Row="3" Background="{StaticResource ControlBackgroundBrush}" 
+                    CornerRadius="0,0,10,10" Padding="20,0">
+                <TextBlock Name="StatusText" Foreground="{StaticResource SecondaryForegroundBrush}" 
+                           VerticalAlignment="Center" FontSize="11" Text="Listo para analizar."/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
