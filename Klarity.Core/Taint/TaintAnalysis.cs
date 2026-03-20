@@ -15,8 +15,31 @@ file static class Sources
         "Request.QueryString",
         "Request.Form",
         "Request.Params",
+        "Request.Headers",
+        "Request.Cookies",
+        "ReadAsync",
         "args",
         "Environment.GetEnvironmentVariable"
+    ];
+}
+
+/// <summary>
+/// Métodos que limpian los datos / Sanitizers
+/// </summary>
+file static class Sanitizers
+{
+    public static readonly string[] Methods =
+    [
+        "HtmlEncoder.Encode",
+        "HtmlEncode",
+        "UrlEncoder.Encode",
+        "UrlEncode",
+        "GetFileName",
+        "int.Parse",
+        "long.Parse",
+        "double.Parse",
+        "bool.Parse",
+        "Guid.Parse"
     ];
 }
 
@@ -37,15 +60,21 @@ file static class Sinks
         
         // Path Traversal
         ("File.ReadAllText",     "PathTraversal"),
+        ("File.WriteAllText",    "PathTraversal"),
         ("File.Open",            "PathTraversal"),
         ("File.ReadAllBytes",    "PathTraversal"),
         ("Directory.GetFiles",   "PathTraversal"),
         ("StreamReader",         "PathTraversal"),
+        ("StreamWriter",         "PathTraversal"),
         
         // XSS
         ("Response.Write",       "XSS"),
         ("HttpResponse.Write",   "XSS"),
         ("Console.Write",        "XSS"),
+
+        // Command Injection
+        ("Process.Start",        "CommandInjection"),
+        ("ShellExecute",         "CommandInjection")
     ];
 }
 
@@ -93,7 +122,11 @@ public class TaintAnalysis : IDataFlowAnalysis<TaintState>
             if (isSink)
             {
                 var location = node.GetLocation().GetLineSpan();
-                Vulnerabilities.Add(BuildResult(vulnType, location));
+                var result = BuildResult(vulnType, location);
+                if (!Vulnerabilities.Any(v => v.LineNumber == result.LineNumber && v.Message == result.Message))
+                {
+                    Vulnerabilities.Add(result);
+                }
             }
         }
 
@@ -106,6 +139,12 @@ public class TaintAnalysis : IDataFlowAnalysis<TaintState>
     {
         var text = expr.ToString();
         return Sources.Methods.Any(s => text.Contains(s));
+    }
+
+    private bool IsSanitized(ExpressionSyntax expr)
+    {
+        var text = expr.ToString();
+        return Sanitizers.Methods.Any(s => text.Contains(s));
     }
 
     private (bool found, string type) FindSink(ExpressionSyntax expr, TaintState state)
@@ -139,6 +178,8 @@ public class TaintAnalysis : IDataFlowAnalysis<TaintState>
 
     private bool IsTainted(ExpressionSyntax expr, TaintState state)
     {
+        if (IsSanitized(expr)) return false;
+
         return expr switch
         {
             IdentifierNameSyntax id          => state.TaintedVariables.Contains(id.Identifier.Text),
@@ -146,6 +187,7 @@ public class TaintAnalysis : IDataFlowAnalysis<TaintState>
             ParenthesizedExpressionSyntax p  => IsTainted(p.Expression, state),
             InterpolatedStringExpressionSyntax interp =>
                 interp.Contents.OfType<InterpolationSyntax>().Any(i => IsTainted(i.Expression, state)),
+            MemberAccessExpressionSyntax member => IsTainted(member.Expression, state),
             _                                => false
         };
     }
@@ -162,6 +204,8 @@ public class TaintAnalysis : IDataFlowAnalysis<TaintState>
                                    lineStr, "Use Path.GetFullPath() y verifique el directorio base.", "High", line),
             "XSS"           => new("Posible XSS: datos del usuario escritos sin codificar.",
                                    lineStr, "Codifique con HtmlEncoder.Encode() antes de escribir.", "Medium", line),
+            "CommandInjection" => new("Posible Command Injection: ejecución de proceso con input externo.",
+                                   lineStr, "Valide estrictamente los argumentos antes de ejecutar.", "High", line),
             _               => new($"Vulnerabilidad '{vulnType}' detectada.",
                                    lineStr, "Valide la entrada del usuario.", "Medium", line)
         };

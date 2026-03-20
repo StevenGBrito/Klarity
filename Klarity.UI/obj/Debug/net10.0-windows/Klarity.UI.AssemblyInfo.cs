@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Klarity.UI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f16b4fee773ba1052887791c812a98fe6c99dc79")]
 [assembly: System.Reflection.AssemblyProductAttribute("Klarity.UI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Klarity.UI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

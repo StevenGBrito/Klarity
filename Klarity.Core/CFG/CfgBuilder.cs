@@ -79,14 +79,14 @@ public class CfgBuilder : CSharpSyntaxWalker
         // Visit Then
         _currentBlock = thenBlock;
         Visit(node.Statement);
-        _currentBlock.AddSuccessor(mergeBlock);
+        if (_currentBlock != null) _currentBlock.AddSuccessor(mergeBlock);
 
         // Visit Else
         if (elseBlock != null)
         {
             _currentBlock = elseBlock;
             Visit(node.Else.Statement);
-            _currentBlock.AddSuccessor(mergeBlock);
+            if (_currentBlock != null) _currentBlock.AddSuccessor(mergeBlock);
         }
 
         _currentBlock = mergeBlock;
@@ -110,9 +110,74 @@ public class CfgBuilder : CSharpSyntaxWalker
         // Handle Body
         _currentBlock = bodyBlock;
         Visit(node.Statement);
-        _currentBlock.AddSuccessor(conditionBlock); // Loop back
+        if (_currentBlock != null) _currentBlock.AddSuccessor(conditionBlock); // Loop back
 
         // Continue after loop
+        _currentBlock = exitBlock;
+    }
+
+    public override void VisitForEachStatement(ForEachStatementSyntax node)
+    {
+        var conditionBlock = CreateBlock();
+        var bodyBlock = CreateBlock();
+        var exitBlock = CreateBlock();
+
+        _currentBlock.AddSuccessor(conditionBlock);
+        _currentBlock = conditionBlock;
+        _currentBlock.AddStatement(node.Expression); 
+        _currentBlock.AddSuccessor(bodyBlock);
+        _currentBlock.AddSuccessor(exitBlock);
+
+        _currentBlock = bodyBlock;
+        Visit(node.Statement);
+        if (_currentBlock != null) _currentBlock.AddSuccessor(conditionBlock);
+
+        _currentBlock = exitBlock;
+    }
+
+    public override void VisitForStatement(ForStatementSyntax node)
+    {
+        if (node.Declaration != null) AddStatement(node.Declaration);
+        foreach (var init in node.Initializers) AddStatement(init);
+
+        var conditionBlock = CreateBlock();
+        var bodyBlock = CreateBlock();
+        var incrementBlock = CreateBlock();
+        var exitBlock = CreateBlock();
+
+        _currentBlock.AddSuccessor(conditionBlock);
+        _currentBlock = conditionBlock;
+        if (node.Condition != null) _currentBlock.AddStatement(node.Condition);
+        _currentBlock.AddSuccessor(bodyBlock);
+        _currentBlock.AddSuccessor(exitBlock);
+
+        _currentBlock = bodyBlock;
+        Visit(node.Statement);
+        if (_currentBlock != null) _currentBlock.AddSuccessor(incrementBlock);
+
+        _currentBlock = incrementBlock;
+        foreach (var inc in node.Incrementors) AddStatement(inc);
+        _currentBlock.AddSuccessor(conditionBlock);
+
+        _currentBlock = exitBlock;
+    }
+
+    public override void VisitSwitchStatement(SwitchStatementSyntax node)
+    {
+        var conditionBlock = _currentBlock;
+        conditionBlock.AddStatement(node.Expression);
+        var exitBlock = CreateBlock();
+
+        foreach (var section in node.Sections)
+        {
+            var sectionBlock = CreateBlock();
+            conditionBlock.AddSuccessor(sectionBlock);
+            _currentBlock = sectionBlock;
+            foreach (var label in section.Labels) _currentBlock.AddStatement(label);
+            foreach (var stmt in section.Statements) Visit(stmt);
+            if (_currentBlock != null) _currentBlock.AddSuccessor(exitBlock);
+        }
+
         _currentBlock = exitBlock;
     }
 
@@ -120,6 +185,6 @@ public class CfgBuilder : CSharpSyntaxWalker
     {
         AddStatement(node);
         _currentBlock.AddSuccessor(_graph.ExitBlock);
-        _currentBlock = CreateBlock(); // Dead code block usually follow returns in linear parse
+        _currentBlock = null; // Following code is unreachable
     }
 }
