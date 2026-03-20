@@ -3,7 +3,7 @@ using Klarity.API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<GeminiService>();
+builder.Services.AddSingleton<OllamaService>();
 
 // Permitir solicitudes desde la app de escritorio (CORS)
 builder.Services.AddCors(options =>
@@ -19,7 +19,7 @@ app.MapControllers();
 
 Console.WriteLine("╔══════════════════════════════════════╗");
 Console.WriteLine("║      Klarity API  -  Escuchando      ║");
-Console.WriteLine("║      http://localhost:5050            ║");
+Console.WriteLine("║      http://localhost:5200            ║");
 Console.WriteLine("╚══════════════════════════════════════╝");
 
-app.Run("http://localhost:5050");
+app.Run("http://localhost:5200");

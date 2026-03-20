@@ -1,0 +1,49 @@
+## [Visual Studio]
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+## [Build folders]
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+## [Visual Studio Code]
+.vscode/
+
+## [NuGet]
+packages/
+*.nupkg
+project.lock.json
+project.assets.json
+
+## [User-specific settings]
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## [Output]
+*.exe
+*.dll
+*.pdb
+*.log
+*.tmp
+
+## [Ollama/IA Log files]
+*.log
+ollama.pid
+
+## [OS specific]
+Thumbs.db
+.DS_Store
+
+## Archivos
+defensa.md
+/Informe
+Klarity_Documentacion.md
+*.pdf
+documentacion/Full_Documentation.md

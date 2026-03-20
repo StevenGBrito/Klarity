@@ -1,88 +1,85 @@
 # Documentación Completa del Proyecto Klarity 🛡️
 
-Este documento consolida toda la información técnica y de usuario del proyecto Klarity.
+Este documento consolida toda la información técnica y de usuario de **Klarity v2.5.0**, la solución integral de seguridad y calidad para infraestructura crítica.
 
 ---
 
 ## 1. Información General
 
 **Nombre:** Klarity
-**Versión:** 2.0.0
-**Fecha de Entrega:** 5 de Marzo, 2026
-**Tecnologías:** C#, .NET 8, Roslyn, WPF, ASP.NET Core, Google Gemini 1.5 Flash.
+**Versión:** 2.5.0
+**Fecha de Actualización:** 20 de Marzo, 2026
+**Tecnologías:** C#, .NET 8, Roslyn, WPF, ASP.NET Core, **Ollama (Llama 3 - 100% Local)**.
 
 ---
 
 ## 2. Resumen Ejecutivo
 
-**Klarity** es una herramienta de análisis estático de código (SAST) avanzada que detecta vulnerabilidades de seguridad en tiempo real. Utiliza el poder del compilador **Roslyn** para realizar análisis semánticos y de flujo de datos, y lo combina con la inteligencia de **Gemini 1.5** para proporcionar remediaciones inteligentes.
+**Klarity** es un ecosistema avanzado de **Shift-Left Security** y **Linting** diseñado para detectar vulnerabilidades y problemas de calidad en tiempo real. Combina la precisión determinista del compilador **Roslyn** con la inteligencia generativa local de **Llama 3**, garantizando la soberanía de los datos y la privacidad total bajo el estándar de EGEHID.
 
 ---
 
 ## 3. Funcionalidades Detalladas
 
-### A. Detección de Vulnerabilidades
-- **Inyección SQL**: Identifica concatenaciones peligrosas en consultas a bases de datos.
-- **Path Traversal**: Detecta accesos inseguros al sistema de archivos mediante inputs de usuario.
-- **XSS (Cross-Site Scripting)**: Alerta sobre la renderización de datos no saneados en salidas de respuesta.
+### A. Detección de Vulnerabilidades (Seguridad) 🔒
+- **Inyecciones**: SQL Injection, Command Injection (`Process.Start`).
+- **Path Traversal**: Accesos inseguros al sistema de archivos.
+- **XSS**: Detección de salidas no saneadas en web.
+- **Taint Analysis Avanzado**: Rastreo de fuentes inseguras (`Request.Headers`, `Cookies`) hasta sumideros peligrosos.
+- **Saneadores (Sanitizers)**: Reconoce automáticamente funciones de limpieza (`HtmlEncode`, `int.Parse`) para eliminar falsos positivos.
 
-### B. Análisis de Proyecto Completo 📂
-- **Escaneo Masivo**: Al abre una carpeta, Klarity escanea automáticamente todos los archivos `.cs` de forma recursiva.
-- **Resultados Consolidados**: Todos los hallazgos se muestran en una única lista, indicando el archivo de origen.
-- **Navegación Inteligente**: Al hacer clic en un resultado, el editor cambia automáticamente al archivo correspondiente y se desplaza a la línea vulnerable.
+### B. Análisis de Calidad (Linting) ✨
+- **Mantenibilidad**: Alertas por anidamiento excesivo (>3 niveles) y métodos demasiado extensos.
+- **Rendimiento**: Identifica concatenación de strings en bucles sugiriendo `StringBuilder`.
+- **Mejores Prácticas**: Detecta bloques `catch` vacíos y valida convenciones de nombres (PascalCase).
 
-### C. Análisis de Flujo de Datos (Taint Analysis)
-El motor de Klarity rastrea el origen de los datos (*Sources*) hasta los puntos de ejecución peligrosos (*Sinks*), asegurando que cualquier dato que provenga del exterior sea validado antes de su uso.
+### C. Análisis de Flujo de Control (CFG) 📉
+Generación de grafos complejos que soportan estructuras lógicas de negocio profundas:
+- Bucles `foreach` y `for`.
+- Sentencias `switch` y `if-else` anidados.
+- Análisis de alcanzabilidad de código mediante puntos fijos.
 
-### D. Asistente con IA
-Integración con **Gemini 1.5 Flash** para:
-- Explicar detalladamente la naturaleza de la vulnerabilidad encontrada.
-- Proporción de parches de código seguros y mejores prácticas (ej. parametrización).
-- Sugerencias de remediación contextuales al código del usuario.
+### D. Asistente IA 100% Local 🤖
+Integración con **Ollama** para:
+- **Remediación Instantánea**: Generación de parches de código funcionales en < 2 segundos.
+- **Explicación Contextual**: Diagnósticos detallados sin conexión a la nube.
+- **Privacidad Total**: El código fuente nunca abandona la red corporativa.
 
 ---
 
 ## 4. Arquitectura del Proyecto
 
-La solución se divide en tres proyectos modulares:
-
-1.  **Klarity.UI (WPF)**:
-    - Interfaz de usuario premium con tema oscuro.
-    - Editor enriquecido con numeración de líneas y resaltado de vulnerabilidades.
-    - Resultados interactivos con scroll automático.
-2.  **Klarity.Core (.NET 8)**:
-    - Motor de análisis basado en Roslyn.
-    - Generador de Grafos de Flujo de Control (CFG).
-    - Cliente de comunicación con la API de IA.
-3.  **Klarity.API (ASP.NET Core)**:
-    - Backend que gestiona las peticiones a los modelos de lenguaje de Google.
-    - Capa de abstracción para el análisis dinámico de código.
+1.  **Klarity.Core**: Motor de análisis semántico, Taint Analysis, CFG y Quality Rules sobre el AST de Roslyn.
+2.  **Klarity.API**: Backend en ASP.NET Core que orquestra la comunicación con Ollama y gestiona la ingeniería de prompts.
+3.  **Klarity.UI**: Cliente WPF premium con editor dinámico, resaltado de líneas vulnerables y explorador de proyectos interactivo.
 
 ---
 
-## 5. Walkthrough (Guía de Uso)
+## 5. Guía de Inicio Rápido
 
-### Instalación y Configuración
-1. Clonar el repositorio.
-2. Abrir `Klarity.sln` en Visual Studio 2022 o superior.
-3. Configurar la `ApiKey` de Gemini en `Klarity.API/appsettings.json`.
+### Requisitos
+- .NET 8 SDK
+- Ollama instalado y corriendo el modelo `llama3`.
 
 ### Ejecución
-1. Iniciar el proyecto `Klarity.API` (Puerto 5050).
-2. Iniciar el proyecto `Klarity.UI`.
-3. Cargar un archivo de prueba. Klarity analizará el código automáticamente al escribir o cargar.
+1. Iniciar **Klarity.API** (Backend de IA).
+2. Iniciar **Klarity.UI** (Panel de Control).
+3. Seleccionar "Cargar Proyecto" para un escaneo recursivo de todos los archivos `.cs`.
 
 ---
 
-## 6. Resultados de Verificación
+## 6. Resultados de Verificación (QA)
 
-El sistema ha sido probado con diversos casos de uso:
-- ✅ Detección exitosa de `SELECT * FROM Users WHERE Id = '` + input + `'`.
-- ✅ Detección de `File.ReadAllText(input)`.
-- ✅ Generación de respuestas coherentes por parte de la IA de Gemini.
+✅ **SQLi**: Detecta exitosamente `cmd.CommandText = "..." + input`.
+✅ **Quality**: Identifica correctamente `catch { }` como riesgo alto.
+✅ **Performance**: Flag en `s += item` dentro de `foreach`.
+✅ **AI Patching**: Genera correcciones válidas parametrizadas para SQLi y XSS.
 
 ---
 
 ## 7. Conclusión
 
-Klarity representa un avance significativo en las herramientas de seguridad asistidas por IA para desarrolladores .NET. Su arquitectura desacoplada permite escalar a nuevas reglas de análisis y modelos de lenguaje de forma sencilla.
+Klarity v2.5.0 redefine el análisis estático local, permitiendo a los desarrolladores de EGEHID escribir código seguro y eficiente sin comprometer la privacidad institucional.
+
+---
+*Klarity: La evolución de la ciberseguridad privada.*

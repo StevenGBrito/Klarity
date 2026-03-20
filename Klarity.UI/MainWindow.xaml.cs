@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -10,6 +10,7 @@ using Klarity.Core.RoslynIntegration;
 using Klarity.Core.CFG;
 using Klarity.Core.DFA;
 using Klarity.Core.Taint;
+using Klarity.Core.Quality;
 using System.IO;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -82,7 +83,7 @@ public partial class MainWindow : Window
     }
 
     private void CodeEditor_ScrollChanged(object s, ScrollChangedEventArgs e)
-        => FindScrollViewer(LineNumbers)?.ScrollToVerticalOffset(e.VerticalOffset);
+        => LineNumberScroll?.ScrollToVerticalOffset(e.VerticalOffset);
 
     private void ResultsList_SelectionChanged(object s, SelectionChangedEventArgs e)
     {
@@ -250,9 +251,18 @@ public partial class MainWindow : Window
                     findingsCount++;
                     Add(v.Message, v.Location, fileName, filePath, v.LineNumber, v.Suggestion);
                 }
+
+                // Code Quality Analysis
+                var quality = new QualityAnalyzer();
+                quality.Visit(tree.GetRoot());
+                foreach (var q in quality.Issues)
+                {
+                    findingsCount++;
+                    Add(q.Message, q.Location, fileName, filePath, q.LineNumber, q.Suggestion);
+                }
             }
 
-            if (filePath == _currentFilePath)
+            if (filePath == (_currentFilePath ?? "Edición en vivo"))
             {
                 ClearHighlights();
                 foreach (var v in Vulnerabilities.Where(x => x.FilePath == fileName))
@@ -307,16 +317,26 @@ public partial class MainWindow : Window
 
     // ── Editor Helpers ────────────────────────────────────────────────────────
     private string GetCode()
-        => new System.Windows.Documents.TextRange(
-            CodeEditor.Document.ContentStart, CodeEditor.Document.ContentEnd).Text;
+    {
+        var textRange = new System.Windows.Documents.TextRange(CodeEditor.Document.ContentStart, CodeEditor.Document.ContentEnd);
+        // Clean up Windows/WPF specific RichTextBox hidden \r\n endings that offset paragraphs.
+        return textRange.Text.Replace("\r\n", "\n").TrimEnd();
+    }
 
     private void SetCode(string code)
     {
         _busy = true;
-        var doc = new FlowDocument { PageWidth = 2000 };
+        var doc = new FlowDocument { 
+            PageWidth = 3000,
+            PagePadding = new Thickness(0)
+        };
         foreach (var line in code.Split(["\r\n", "\r", "\n"], StringSplitOptions.None))
         {
-            var p = new Paragraph { Margin = new Thickness(0), LineHeight = 18 };
+            var p = new Paragraph { 
+                Margin = new Thickness(0), 
+                LineHeight = 18,
+                LineStackingStrategy = LineStackingStrategy.BlockLineHeight
+            };
             ApplySyntaxColoring(line, p);
             doc.Blocks.Add(p);
         }
@@ -327,17 +347,21 @@ public partial class MainWindow : Window
 
     private void UpdateLineNumbers()
     {
-        int n = CodeEditor.Document.Blocks.Count;
-        if (LineNumbers.Items.Count == n) return;
-        LineNumbers.Items.Clear();
+        int n = GetCode().Split('\n').Length;
+        // The first visual line might be empty but valid. Minimum 1 line.
+        n = Math.Max(1, n);
+
+        var sb = new System.Text.StringBuilder();
         for (int i = 1; i <= n; i++)
-            LineNumbers.Items.Add(new TextBlock
-            {
-                Text = i.ToString(), Height = 18,
-                FontFamily = new System.Windows.Media.FontFamily("Consolas"), FontSize = 13,
-                TextAlignment = TextAlignment.Right, Margin = new Thickness(0, 0, 5, 0),
-                Foreground = System.Windows.Media.Brushes.Gray
-            });
+        {
+            sb.AppendLine(i.ToString());
+        }
+        
+        var newText = sb.ToString();
+        if (LineNumbers.Text != newText)
+        {
+            LineNumbers.Text = newText;
+        }
     }
 
     private Block? GetBlock(int oneBased)
@@ -382,18 +406,6 @@ public partial class MainWindow : Window
 
     private static Run Colored(string text, string hex)
         => new(text) { Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hex)) };
-
-    // ── Scroll Viewer Helper ──────────────────────────────────────────────────
-    private static ScrollViewer? FindScrollViewer(DependencyObject obj)
-    {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-        {
-            var c = VisualTreeHelper.GetChild(obj, i);
-            if (c is ScrollViewer sv) return sv;
-            if (FindScrollViewer(c) is { } r) return r;
-        }
-        return null;
-    }
 
     // ── Window Chrome ─────────────────────────────────────────────────────────
     private void CloseButton_Click(object s, RoutedEventArgs e)    => Close();

@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "zLm4btEmJu0=",
+  "dgSpecHash": "0iildUshMzc=",
   "success": true,
   "projectFilePath": "C:\\Users\\steve\\.gemini\\antigravity\\scratch\\Klarity\\Klarity.API\\Klarity.API.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\steve\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.4\\microsoft.codeanalysis.analyzers.3.3.4.nupkg.sha512",
+    "C:\\Users\\steve\\.nuget\\packages\\microsoft.codeanalysis.common\\4.8.0-3.final\\microsoft.codeanalysis.common.4.8.0-3.final.nupkg.sha512",
+    "C:\\Users\\steve\\.nuget\\packages\\microsoft.codeanalysis.csharp\\4.8.0-3.final\\microsoft.codeanalysis.csharp.4.8.0-3.final.nupkg.sha512"
+  ],
   "logs": []
 }

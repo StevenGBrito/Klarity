@@ -10,12 +10,12 @@ namespace Klarity.Core.AI;
 public class HttpAIService : IAIService
 {
     private readonly HttpClient _http;
-    private const string ApiBaseUrl = "http://localhost:5050";
+    private const string ApiBaseUrl = "http://localhost:5200";
 
     public HttpAIService()
     {
         _http = new HttpClient { BaseAddress = new Uri(ApiBaseUrl) };
-        _http.Timeout = TimeSpan.FromSeconds(15);
+        _http.Timeout = TimeSpan.FromMinutes(2);
     }
 
     public async Task<string> AnalyzeVulnerabilityAsync(string vulnerabilityType, string sourceCode)
@@ -45,7 +45,7 @@ public class HttpAIService : IAIService
             return """
                 ### ❌ No se pudo conectar con la API
 
-                La API de Klarity no está disponible en `http://localhost:5050`.
+                La API de Klarity no está disponible en `http://localhost:5200`.
 
                 **Para iniciarla:**
                 ```

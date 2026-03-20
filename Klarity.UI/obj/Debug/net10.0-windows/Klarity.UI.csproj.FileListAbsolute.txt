@@ -98,6 +98,7 @@ C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\bin\Debug\net10.0-
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\bin\Debug\net10.0-windows\Klarity.Core.pdb
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.csproj.AssemblyReference.cache
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\MainWindow.baml
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\App.baml
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\MainWindow.g.cs
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\App.g.cs
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI_MarkupCompile.cache
@@ -106,10 +107,10 @@ C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.AssemblyInfoInputs.cache
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.AssemblyInfo.cs
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.csproj.CoreCompileInputs.cache
+C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.sourcelink.json
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.csproj.Up2Date
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.dll
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\refint\Klarity.UI.dll
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.pdb
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\Klarity.UI.genruntimeconfig.cache
 C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\ref\Klarity.UI.dll
-C:\Users\steve\.gemini\antigravity\scratch\Klarity\Klarity.UI\obj\Debug\net10.0-windows\App.baml
